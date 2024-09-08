@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:b="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 https://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/security
+	https://www.springframework.org/schema/security/spring-security.xsd">
+
+	<authentication-manager>
+		<authentication-provider>
+			<jdbc-user-service data-source-ref="dataSource"
+				users-by-username-query="select username, password,1 from users where username=?"
+				authorities-by-username-query="select username, authority from authorities where username=?" />
+		</authentication-provider>
+	</authentication-manager>
+
+	<http auto-config="true" use-expressions="true">
+		<intercept-url pattern="/" access="permitAll" />
+		<intercept-url pattern="/attLecture" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/login" access="permitAll" />
+		<intercept-url pattern="/logout" access="permitAll" />
+		<intercept-url pattern="/registerLecture" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/viewRegisterLecture" access="hasRole('ROLE_USER')" />
+		  <intercept-url pattern="/offercreated" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/viewLecture" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/docreate" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/resources/**" access="denyAll" />
+		
+		<intercept-url pattern="/**" access="isAuthenticated()" />
+		<!-- custom login form을 위한 코드이다. -->
+		<form-login login-page="/login" authentication-failure-url="/login?error" />
+		<logout/>
+	</http>
+</b:beans>
